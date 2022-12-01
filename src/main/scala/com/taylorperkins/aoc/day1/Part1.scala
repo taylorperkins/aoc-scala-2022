@@ -7,7 +7,9 @@ object Part1 extends App
   using(resource("src/main/resources/day1.txt")) { input => {
 
     val result = input.toAOC
+      // each "elf's calories group" is denoted by a new line
       .split("\n\n")
+      // for each elf's calories..
       .map(calories => {
         calories
           .split("\n")
