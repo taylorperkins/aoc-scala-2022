@@ -5,6 +5,17 @@ object Part1 extends App
   with Utils
 {
   using(resource("src/main/resources/day1.txt")) { input => {
-    println(input.getLines().toList)
+
+    val result = input.toAOC
+      .split("\n\n")
+      .map(calories => {
+        calories
+          .split("\n")
+          .map(_.toInt)
+          .sum
+      })
+      .max
+
+    println(result)
   }}
 }

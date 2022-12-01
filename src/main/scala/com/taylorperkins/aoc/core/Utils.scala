@@ -19,4 +19,10 @@ trait Utils
 
   def resource(fp: String): BufferedSource =
     Source.fromFile(fp)
+
+  implicit class BufferedSourceUtils(s: BufferedSource)
+  {
+    def toAOC = s.getLines.mkString("\n")
+  }
+
 }
