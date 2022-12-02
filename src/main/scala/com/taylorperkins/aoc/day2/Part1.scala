@@ -11,16 +11,18 @@ object Part1 extends App
     val Rock, Paper, Scissors = Value
   }
 
-  case class RPSValue(label: RPSEnum.Object, value: Int, win: RPSEnum.Object, loss: RPSEnum.Object) {
+  import RPSEnum._
+
+  case class RPSValue(label: Object, value: Int, win: Object, loss: Object) {
     def play(other: RPSValue): Int = other.label match
       case `label`   => 3 + value
       case `win`     => 6 + value
       case `loss`    => 0 + value
   }
 
-  val rock = RPSValue(RPSEnum.Rock, 1, RPSEnum.Scissors, RPSEnum.Paper)
-  val paper = RPSValue(RPSEnum.Paper, 2, RPSEnum.Rock, RPSEnum.Scissors)
-  val scissors = RPSValue(RPSEnum.Scissors, 3, RPSEnum.Paper, RPSEnum.Rock)
+  val rock = RPSValue(Rock, 1, Scissors, Paper)
+  val paper = RPSValue(Paper, 2, Rock, Scissors)
+  val scissors = RPSValue(Scissors, 3, Paper, Rock)
 
   implicit def toRPS(s: String): RPSValue = s match {
     case "A" | "X" => rock
@@ -38,8 +40,8 @@ object Part1 extends App
 
     val result = input.getLines
       .map(line => {
-        val Array(a, b) = line.split(" ")
-        b.play(a)
+        val Array(theirs, mine) = line.split(" ")
+        mine.play(theirs)
       })
       .sum
 
