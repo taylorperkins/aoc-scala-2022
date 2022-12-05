@@ -9,7 +9,7 @@ object Part1 extends App
   with Utils
 {
 
-  class Supplies(size: Int)
+  class CrateMover9000(size: Int)
   {
       val stacks = Array.fill(size) { new mutable.Stack[String].empty }
 
@@ -30,14 +30,14 @@ object Part1 extends App
 
 
   @tailrec
-  def toSupplies(line: String, supplies: Supplies, idx: Int = 0): Unit = {
+  def toSupplies(line: String, cm: CrateMover9000, idx: Int = 0): Unit = {
     if (!line.isEmpty) {
       val next = line.take(3).replace("[", "").replace("]", "")
       if (!next.trim().isEmpty) {
-        supplies.push(idx, next)
+        cm.push(idx, next)
       }
       val drop = if (line.length == 3) 3 else 4
-      toSupplies(line.drop(drop), supplies, idx+1)
+      toSupplies(line.drop(drop), cm, idx+1)
     }
   }
 
@@ -48,20 +48,19 @@ object Part1 extends App
 
     val rawStacks = inputStacks.split("\n").reverse.drop(1)
 
-    val supplies = Supplies(rawStacks.head.split(' ').length)
-    rawStacks.foreach(toSupplies(_, supplies))
+    val cm = CrateMover9000(rawStacks.head.split(' ').length)
+    rawStacks.foreach(toSupplies(_, cm))
 
     val commandRE = "move ([0-9]+) from ([0-9]+) to ([0-9]+)".r
     inputCommands.split("\n")
       .foreach(line => {
         line match {
           case commandRE(amount, from, to) => {
-            println(mutable.Seq(amount, from, to))
-            supplies.move(amount.toInt, from.toInt - 1, to.toInt - 1)
+            cm.move(amount.toInt, from.toInt - 1, to.toInt - 1)
           }
         }
       })
 
-    println(supplies.top)
+    println(cm.top)
   }}
 }
