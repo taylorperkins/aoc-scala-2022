@@ -33,14 +33,14 @@ object Part2 extends App
 
 
   @tailrec
-  def toSupplies(line: String, cm: CrateMover9001, idx: Int = 0): Unit = {
+  def stackCrates(line: String, cm: CrateMover9001, idx: Int = 0): Unit = {
     if (!line.isEmpty) {
       val next = line.take(3).replace("[", "").replace("]", "")
       if (!next.trim().isEmpty) {
         cm.push(idx, next)
       }
       val drop = if (line.length == 3) 3 else 4
-      toSupplies(line.drop(drop), cm, idx+1)
+      stackCrates(line.drop(drop), cm, idx+1)
     }
   }
 
@@ -52,7 +52,7 @@ object Part2 extends App
     val rawStacks = inputStacks.split("\n").reverse.drop(1)
 
     val cm = CrateMover9001(rawStacks.head.split(' ').length)
-    rawStacks.foreach(toSupplies(_, cm))
+    rawStacks.foreach(stackCrates(_, cm))
 
     val commandRE = "move ([0-9]+) from ([0-9]+) to ([0-9]+)".r
     inputCommands.split("\n")
