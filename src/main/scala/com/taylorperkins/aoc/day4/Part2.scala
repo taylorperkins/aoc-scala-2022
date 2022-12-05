@@ -12,8 +12,8 @@ object Part2 extends App
         val Array(a, b) = left.split("-").map(_.toInt)
         val Array(y, z) = right.split("-").map(_.toInt)
 
-        if ((a to b).toSet.intersect((y to z).toSet).size > 0) 1
-        else 0
+        if ((a to b).toSet.intersect((y to z).toSet).isEmpty) 0
+        else 1
       })
       .sum
 
