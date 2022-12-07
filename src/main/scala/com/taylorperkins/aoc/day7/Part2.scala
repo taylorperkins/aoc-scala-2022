@@ -63,12 +63,9 @@ object Part2 extends App
   // as the full path. Can parse later
   def runCommands(commands: List[String]): DirectoryTree = {
 
-    val pathRE = "\\$ cd (/.*)".r
     val cdRE = "\\$ cd (\\w+)".r
     val upRE = "\\$ cd \\.\\.".r
-    val lsRE = "\\$ ls".r
     val fileRE = "(\\d+) (.*)".r
-    val dirRE = "dir (.*)".r
 
     @tailrec
     def inner(tree: Option[DirectoryTree], commands: List[String]): Option[DirectoryTree] = {
@@ -76,8 +73,6 @@ object Part2 extends App
       else tree match {
         case None    => throw new Error("Not expecting to handle None")
         case Some(t) => commands.head match {
-          // really don't do anything here
-          case pathRE(dir) => inner(tree, commands.tail)
 
           // move down into the tree
           case cdRE(dir) => inner(t.getChild(dir), commands.tail)
@@ -85,8 +80,6 @@ object Part2 extends App
           // move to the parent
           case upRE() => inner(t.parent, commands.tail)
 
-          // really don't do anything here
-          case lsRE() => inner(tree, commands.tail)
 
           // add the file+mem to the current node in the tree
           case fileRE(fileSize, name) => {
@@ -94,20 +87,13 @@ object Part2 extends App
             inner(tree, commands.tail)
           }
 
-          // really don't do anything here
-          case dirRE(name) => inner(tree, commands.tail)
-
-          case _ => throw new Error(s"Bad pattern for ${commands.head}")
+          case _ => inner(tree, commands.tail)
         }
       }
     }
 
     // Kind of cheating that I start with the root path, but w/e
-
-    inner(Some(DirectoryTree("/")), commands) match {
-      case Some(tree) => tree.top
-      case None       => throw new Error("You suck at this.")
-    }
+    inner(Some(DirectoryTree("/")), commands).get.top
   }
 
   using(resource("src/main/resources/day7.txt")) { input => {
