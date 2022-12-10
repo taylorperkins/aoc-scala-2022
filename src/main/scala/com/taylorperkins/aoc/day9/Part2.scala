@@ -10,8 +10,6 @@ object Part2 extends App
 
   implicit class CoordUtils(thisCoord: Coord)
   {
-    def is(thatCoord: Coord) = thisCoord == thatCoord
-
     def move(direction: String): Coord = direction match {
       case "L" => (thisCoord._1-1, thisCoord._2)
       case "R" => (thisCoord._1+1, thisCoord._2)
