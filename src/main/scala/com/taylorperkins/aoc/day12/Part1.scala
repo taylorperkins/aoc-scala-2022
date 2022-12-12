@@ -12,7 +12,6 @@ object Part1 extends App
 
   type Coord = (Int, Int)
   type Grid = Array[Array[Char]]
-  type Graph = Array[Vertex]
 
   implicit class GridUtils(grid: Grid) {
     // our graph is a matrix, so we can take advantage of some
@@ -95,14 +94,6 @@ object Part1 extends App
 
     val result = dijkstra(vertices.find(_.value == 'S').get)(_.value == 'E')
     println(result)
-//    result (_.value == 'E') match
-//      case Some(graph) =>
-//        graph.foreach(v => println(s"${v.id}: ${v.value}"))
-//        println(graph.length)
-//      case None      => println("Didn't find it.")
-
-//    val result = search
-//    println(result)
 
   }}
 }
