@@ -133,43 +133,53 @@ object Part2 extends App
     }
   }
 
+  def time[R](block: => R): R = {
+    val t0 = System.nanoTime()
+    val result = block    // call-by-name
+    val t1 = System.nanoTime()
+    println("Elapsed time: " + (t1 - t0) + "ns")
+    result
+  }
 
-  using(resource("src/main/resources/day11.txt")) { input => {
 
-    val monkeys = input.toAOC
-      // each monkey's notes
-      .split("\n\n")
-      .map(notes => {
-        val m = Monkey.fromInput(notes.split("\n").toList)
-        (m.id, m)
-      })
-      .toMap
+  time {
+    using(resource("src/main/resources/day11.txt")) { input => {
 
-    val kag = new KeepAwayGame(monkeys)
-    for {
-      i <- 1 to 10000
-    } {
-      kag.round()
-      if ((List(1, 20) ++ (1000 to 10000 by 1000)) contains(i)) {
-        println(i)
-        println(kag.inspectionMap)
-        println()
+      val monkeys = input.toAOC
+        // each monkey's notes
+        .split("\n\n")
+        .map(notes => {
+          val m = Monkey.fromInput(notes.split("\n").toList)
+          (m.id, m)
+        })
+        .toMap
+
+      val kag = new KeepAwayGame(monkeys)
+      for {
+        i <- 1 to 10000
+      } {
+        kag.round()
+//        if ((List(1, 20) ++ (1000 to 10000 by 1000)) contains (i)) {
+//          println(i)
+//          println(kag.inspectionMap)
+//          println()
+//        }
       }
+
+      println(kag.inspectionMap)
+
+      val result = kag.inspectionMap
+        .values
+        .toList
+        .sorted
+        .reverse
+        .take(2)
+        .map(BigInt(_))
+        .reduce(_ * _)
+
+      println(result)
+
     }
-
-    println(kag.inspectionMap)
-
-    val result = kag.inspectionMap
-      .values
-      .toList
-      .sorted
-      .reverse
-      .take(2)
-      .map(BigInt(_))
-      .reduce(_*_)
-
-    println(result)
-
-
-  }}
+    }
+  }
 }
