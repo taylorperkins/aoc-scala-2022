@@ -51,7 +51,6 @@ object Part1 extends App
         parse0(input, Array.empty[Any])
       }
 
-      // don't need ',' since we convert to an array anyways
       toArr0(parse(string.replace(" ", "")))
     }
   }
