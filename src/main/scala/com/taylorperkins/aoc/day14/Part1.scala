@@ -54,6 +54,35 @@ object Part1 extends App
     simulate0(start, 0, directions)(grid)
   }
 
+
+  def simulatePt2(grid: Map[Int, Set[Int]]): Int = {
+    val start = (0, 500)
+    // sand can build on this row indefinitely
+    val lowestRow = grid.keys.max + 2
+
+    val directions = List(
+      (coord: Coord) => (coord._1 + 1, coord._2),
+      (coord: Coord) => (coord._1 + 1, coord._2 - 1),
+      (coord: Coord) => (coord._1 + 1, coord._2 + 1)
+    )
+
+    @tailrec
+    def simulate0(current: Coord, acc: Int, directionsRemaining: List[Coord => Coord])(implicit grid: Map[Int, Set[Int]]): Int = {
+      if (directionsRemaining.isEmpty && current == start) acc + 1
+      // settled, nothing else to do
+      else if (directionsRemaining.isEmpty) simulate0(start, acc + 1, directions)(grid + (current._1 -> (grid.getOrElse(current._1, Set.empty[Int]) + current._2)))
+      else {
+        val nextStep = directionsRemaining.head(current)
+        // try another direction
+        if (gridContains(nextStep) || nextStep._1 == lowestRow) simulate0(current, acc, directionsRemaining.tail)
+        else simulate0(nextStep, acc, directions)
+      }
+    }
+
+    simulate0(start, 0, directions)(grid)
+  }
+
+
   using(resource("src/main/resources/day14.txt")) { input => {
 
     val coords = input.getLines
@@ -88,8 +117,9 @@ object Part1 extends App
 
     val mapSet = parseInput(coords)
 
-    val result = simulate(mapSet)
+//    val pt1 = simulate(mapSet)
+    val pt2 = simulatePt2(mapSet)
 
-    println(result)
+    println(pt2)
   }}
 }
