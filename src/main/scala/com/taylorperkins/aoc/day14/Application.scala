@@ -118,16 +118,12 @@ object Application extends App
 
     val lines = input.toAOC
 
-    val pt1 = time {
-      val grid = buildGrid(lines)
-      time { simulate(grid)("pt1") }
-    }
+    val grid = time { buildGrid(lines) }
+
+    val pt1 = time { simulate(grid)("pt1") }
     println(pt1)
 
-    val pt2 = time {
-      val grid = buildGrid(lines)
-      time { simulate(grid)("pt2") }
-    }
+    val pt2 = time { simulate(grid)("pt2") }
     println(pt2)
 
   }}
