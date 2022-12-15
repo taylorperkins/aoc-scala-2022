@@ -50,6 +50,7 @@ object Part2 extends App
       ranges.dropRight(1) ++ next
   }
 
+
   using(resource("src/main/resources/day15.txt")) { input => {
 
     val inputRE = "Sensor at x=(-?\\d+), y=(-?\\d+): closest beacon is at x=(-?\\d+), y=(-?\\d+)".r
@@ -64,7 +65,8 @@ object Part2 extends App
     }
 
     time {
-      (0 to 4000000)
+      val results = (0 to 4000000)
+        .iterator
         .flatMap(row => {
           val ranges = sensors.flatMap(_.vizAt(row))
             .sortWith(_.start < _.start)
@@ -79,7 +81,8 @@ object Part2 extends App
           }
         })
         .map(coord => coord.col*BigInt(4000000)+coord.row)
-        .foreach(println)
+
+      println(results.next())
     }
   }}
 
