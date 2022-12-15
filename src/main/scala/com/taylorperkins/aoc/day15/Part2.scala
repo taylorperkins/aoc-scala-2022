@@ -61,35 +61,21 @@ object Part2 extends App
       })
       .toList
 
-    val row = 2000000
+    (0 to 4000000)
+      .flatMap(row => {
+        val ranges = sensors.flatMap(_.vizAt(row))
+          .sortWith(_.start < _.start)
+          .foldLeft(List.empty[Range])(mergeRange)
+          .dropWhile(_.stop < 0)
 
-    val ranges = sensors
-      .map(_.vizAt(row))
-      .filterNot(_.isEmpty)
-      .map(_.get)
-      .sortWith(_.start < _.start)
-      .foldLeft(List.empty[Range])(mergeRange)
-
-    val visibility = ranges.map(_.size).sum
-
-    val existingBeacons = sensors
-      .map(_.closestBeacon)
-      .filter(_.row == row)
-      .map(_.col)
-      .toSet
-      .size
-
-    println(ranges)
-    println(visibility - existingBeacons)
-
-//    val ranges = mergeRanges(sensors.map(_.vizAt(row)))
-//
-//    val visibility = sensors
-//      .flatMap(_.vizAt(row))
-//      .toSet
-//      .size
-//
-//
-//    println(visibility - existingBeacons)
+        ranges match {
+          case List(r1, r2) =>
+            if (r1.stop+1 != r2.start) Some(Coord(row = row, col = r1.stop+1))
+            else None
+          case _ => None
+        }
+      })
+      .map(coord => coord.col*BigInt(4000000)+coord.row)
+      .foreach(println)
   }}
 }
