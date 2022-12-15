@@ -54,28 +54,33 @@ object Part2 extends App
 
     val inputRE = "Sensor at x=(-?\\d+), y=(-?\\d+): closest beacon is at x=(-?\\d+), y=(-?\\d+)".r
 
-    val sensors = input.getLines
-      .map(line => {
-        line match
-          case inputRE(sx, sy, bx, by) => Sensor(loc = Coord(sx.toInt, sy.toInt), closestBeacon = Coord(bx.toInt, by.toInt))
-      })
-      .toList
+    val sensors = time {
+      input.getLines
+        .map(line => {
+          line match
+            case inputRE(sx, sy, bx, by) => Sensor(loc = Coord(sx.toInt, sy.toInt), closestBeacon = Coord(bx.toInt, by.toInt))
+        })
+        .toList
+    }
 
-    (0 to 4000000)
-      .flatMap(row => {
-        val ranges = sensors.flatMap(_.vizAt(row))
-          .sortWith(_.start < _.start)
-          .foldLeft(List.empty[Range])(mergeRange)
-          .dropWhile(_.stop < 0)
+    time {
+      (0 to 4000000)
+        .flatMap(row => {
+          val ranges = sensors.flatMap(_.vizAt(row))
+            .sortWith(_.start < _.start)
+            .foldLeft(List.empty[Range])(mergeRange)
+            .dropWhile(_.stop < 0)
 
-        ranges match {
-          case List(r1, r2) =>
-            if (r1.stop+1 != r2.start) Some(Coord(row = row, col = r1.stop+1))
-            else None
-          case _ => None
-        }
-      })
-      .map(coord => coord.col*BigInt(4000000)+coord.row)
-      .foreach(println)
+          ranges match {
+            case List(r1, r2) =>
+              if (r1.stop+1 != r2.start) Some(Coord(row = row, col = r1.stop+1))
+              else None
+            case _ => None
+          }
+        })
+        .map(coord => coord.col*BigInt(4000000)+coord.row)
+        .foreach(println)
+    }
   }}
+
 }

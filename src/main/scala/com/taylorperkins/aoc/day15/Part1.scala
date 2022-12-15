@@ -52,44 +52,37 @@ object Part1 extends App
 
   using(resource("src/main/resources/day15.txt")) { input => {
 
-    val inputRE = "Sensor at x=(-?\\d+), y=(-?\\d+): closest beacon is at x=(-?\\d+), y=(-?\\d+)".r
+    time {
 
-    val sensors = input.getLines
-      .map(line => {
-        line match
-          case inputRE(sx, sy, bx, by) => Sensor(loc = Coord(sx.toInt, sy.toInt), closestBeacon = Coord(bx.toInt, by.toInt))
-      })
-      .toList
+      val inputRE = "Sensor at x=(-?\\d+), y=(-?\\d+): closest beacon is at x=(-?\\d+), y=(-?\\d+)".r
 
-    val row = 2000000
+      val sensors = input.getLines
+        .map(line => {
+          line match
+            case inputRE(sx, sy, bx, by) => Sensor(loc = Coord(sx.toInt, sy.toInt), closestBeacon = Coord(bx.toInt, by.toInt))
+        })
+        .toList
 
-    val ranges = sensors
-      .map(_.vizAt(row))
-      .filterNot(_.isEmpty)
-      .map(_.get)
-      .sortWith(_.start < _.start)
-      .foldLeft(List.empty[Range])(mergeRange)
+      val row = 2000000
 
-    val visibility = ranges.map(_.size).sum
+      val ranges = sensors
+        .map(_.vizAt(row))
+        .filterNot(_.isEmpty)
+        .map(_.get)
+        .sortWith(_.start < _.start)
+        .foldLeft(List.empty[Range])(mergeRange)
 
-    val existingBeacons = sensors
-      .map(_.closestBeacon)
-      .filter(_.row == row)
-      .map(_.col)
-      .toSet
-      .size
+      val visibility = ranges.map(_.size).sum
 
-    println(ranges)
-    println(visibility - existingBeacons)
+      val existingBeacons = sensors
+        .map(_.closestBeacon)
+        .filter(_.row == row)
+        .map(_.col)
+        .toSet
+        .size
 
-    //    val ranges = mergeRanges(sensors.map(_.vizAt(row)))
-    //
-    //    val visibility = sensors
-    //      .flatMap(_.vizAt(row))
-    //      .toSet
-    //      .size
-    //
-    //
-    //    println(visibility - existingBeacons)
+      println(ranges)
+      println(visibility - existingBeacons)
+    }
   }}
 }
